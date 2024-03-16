@@ -22,5 +22,5 @@ public class Song {
     public void setName(String name) {
         this.name = name;
     }
-    
+
 }
