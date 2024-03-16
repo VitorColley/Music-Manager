@@ -11,17 +11,20 @@ import javax.swing.JOptionPane;
  * @author Vitor Colley
  */
 public class MusicManagerAppGUI extends javax.swing.JFrame {
-    
+
+    //create a stack for the liked songs so that only the last song added can be manipulated in turn
     Stack likedSongs = new Stack();
+    //create linear lists for the remaining playlists as they will be manipulated in various manners
     LinearPlaylist happyPlaylist = new LinearPlaylist();
     LinearPlaylist sadPlaylist = new LinearPlaylist();
     LinearPlaylist dancingPlaylist = new LinearPlaylist();
     LinearPlaylist exercisingPlaylist = new LinearPlaylist();
+
+    //boolean that determines if playlists are set to repeat or not
     boolean repeatHappy = false;
     boolean repeatSad = false;
     boolean repeatDancing = false;
     boolean repeatExercising = false;
-    
 
     /**
      * Creates new form MusicManagerAppGUI
@@ -257,269 +260,352 @@ public class MusicManagerAppGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_songTfActionPerformed
 
     private void addBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBtnActionPerformed
-        // TODO add your handling code here:
+        //variable to hold the new song created that is extracted from the song text field
         Song newSong = new Song(songTf.getText());
-        if(newSong.getName().equalsIgnoreCase("")){
+        //check if there is a song to be created
+        if (newSong.getName().equalsIgnoreCase("")) {
             displayTa.append("Please enter a Song\n");
-        }else{
+        } else {
+            //if so then add it to the stack
             likedSongs.push(newSong);
-            displayTa.append(newSong.getName()+" was added to Liked Songs\n");
+            //display the addition to the user
+            displayTa.append(newSong.getName() + " was added to Liked Songs\n");
         }
-        
-        
+
+
     }//GEN-LAST:event_addBtnActionPerformed
 
     private void addSongBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addSongBtnActionPerformed
-        // TODO add your handling code here:
+        // variable to hold the song that will be added to the linear list
         Song newSong;
-        if(playlistCb.getSelectedItem().toString().equalsIgnoreCase(" ")){
+        //checks if a list is selected
+        if (playlistCb.getSelectedItem().toString().equalsIgnoreCase(" ")) {
+            //otehrwise asks user to select one
             displayTa.append("Please select a Playlist\n");
-        }else{
+        } else {
+            //retrieves and removes song from stack, holding it in a variable
             newSong = likedSongs.pop();
-            if(newSong!=null){
-                if(playlistCb.getSelectedItem().toString().equalsIgnoreCase("Happy")){
-                happyPlaylist.add(newSong);
-                displayTa.append(newSong.getName()+" was added to the Happy Playlist\n");
-                }else if(playlistCb.getSelectedItem().toString().equalsIgnoreCase("Sad")){
+            //checks if tehre was a song in the stack
+            if (newSong != null) {
+                //checks the list selected, adds it accordingly and displays action to user
+                if (playlistCb.getSelectedItem().toString().equalsIgnoreCase("Happy")) {
+                    happyPlaylist.add(newSong);
+                    displayTa.append(newSong.getName() + " was added to the Happy Playlist\n");
+                } else if (playlistCb.getSelectedItem().toString().equalsIgnoreCase("Sad")) {
                     sadPlaylist.add(newSong);
-                    displayTa.append(newSong.getName()+" was added to the Sad Playlist\n");
-                }else if(playlistCb.getSelectedItem().toString().equalsIgnoreCase("Dancing")){
+                    displayTa.append(newSong.getName() + " was added to the Sad Playlist\n");
+                } else if (playlistCb.getSelectedItem().toString().equalsIgnoreCase("Dancing")) {
                     dancingPlaylist.add(newSong);
-                    displayTa.append(newSong.getName()+" was added to the Dancing Playlist\n");
-                }else if(playlistCb.getSelectedItem().toString().equalsIgnoreCase("Exercising")){
+                    displayTa.append(newSong.getName() + " was added to the Dancing Playlist\n");
+                } else if (playlistCb.getSelectedItem().toString().equalsIgnoreCase("Exercising")) {
                     exercisingPlaylist.add(newSong);
-                    displayTa.append(newSong.getName()+" was added to the Exercising Playlist\n");
+                    displayTa.append(newSong.getName() + " was added to the Exercising Playlist\n");
                 }
-            }else{
-                displayTa.append("You can only move the most recently song added to Liked Songs to a new playlist\n Please, add another song and try again\n");
+            } else {
+                //informs user the stack is empty and asks user to add a song to it before it can be moved 
+                displayTa.append("There are no songs in the Liked Songs playlist\n Please add another song and try again\n");
             }
-        }    
-        
-        
+        }
+
+
     }//GEN-LAST:event_addSongBtnActionPerformed
 
     private void removeBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeBtnActionPerformed
-        // TODO add your handling code here:
+        // variable to hold the deleted song's index
         int deleteSong;
+        // holds the object from the list
         Song object;
+        //holds the name of the object in a string
         String deletedSong;
-        if(playlistCb.getSelectedItem().toString().equalsIgnoreCase("Happy")){
-            if(happyPlaylist.isEmpty()){
+        //checks wich playlist is being manipulated
+        if (playlistCb.getSelectedItem().toString().equalsIgnoreCase("Happy")) {
+            //checks if playlist is empty
+            if (happyPlaylist.isEmpty()) {
                 displayTa.append("There are no songs to be removed from the Playlist\n");
-            }else{
-                deleteSong = Integer.parseInt(JOptionPane.showInputDialog(null, happyPlaylist.printList()+"Please enter the position of the song you want to remove:"));
-                object = happyPlaylist.get(deleteSong);
-                deletedSong = object.getName();
-                happyPlaylist.remove(deleteSong);                
-                displayTa.append(deletedSong+" was removed from the Happy Playlist\n");
-                likedSongs.push(object);
-                displayTa.append(deletedSong+" was added back to Liked Songs\n");
+            } else {
+                //displays list and asks for the index of the song to be deleted
+                deleteSong = Integer.parseInt(JOptionPane.showInputDialog(null, happyPlaylist.printList() + "Please enter the position of the song you want to remove:"));
+                //catch error if user enter an empty index
+                try {
+                    object = happyPlaylist.get(deleteSong);
+                    deletedSong = object.getName();
+                    //remove song from list
+                    happyPlaylist.remove(deleteSong);
+                    displayTa.append(deletedSong + " was removed from the Happy Playlist\n");
+                    //add to liked songs again
+                    likedSongs.push(object);
+                    displayTa.append(deletedSong + " was added back to Liked Songs\n");
+                } catch (NullPointerException e) {
+                    displayTa.append("There is no song in that position, please try again\n");
+                }
             }
-            
-        }else if(playlistCb.getSelectedItem().toString().equalsIgnoreCase("Sad")){
-            if(sadPlaylist.isEmpty()){
+            //checks wich playlist is being manipulated     
+        } else if (playlistCb.getSelectedItem().toString().equalsIgnoreCase("Sad")) {
+            //checks if playlist is empty
+            if (sadPlaylist.isEmpty()) {
                 displayTa.append("There are no songs to be removed from the Playlist\n");
-            }else{
-                deleteSong = Integer.parseInt(JOptionPane.showInputDialog(null, sadPlaylist.printList()+"Please enter the position of the song you want to remove:"));
-                object = sadPlaylist.get(deleteSong);
-                deletedSong = object.getName();
-                sadPlaylist.remove(deleteSong);                
-                displayTa.append(deletedSong+" was removed from the Sad Playlist\n");
-                likedSongs.push(object);
-                displayTa.append(deletedSong+" was added back to Liked Songs\n");
+            } else {
+                //displays list and asks for the index of the song to be deleted
+                deleteSong = Integer.parseInt(JOptionPane.showInputDialog(null, sadPlaylist.printList() + "Please enter the position of the song you want to remove:"));
+                //catch error if user enter an empty index
+                try {
+                    object = sadPlaylist.get(deleteSong);
+                    deletedSong = object.getName();
+                    //remove song from list
+                    sadPlaylist.remove(deleteSong);
+                    displayTa.append(deletedSong + " was removed from the Sad Playlist\n");
+                    //add to liked songs again
+                    likedSongs.push(object);
+                    displayTa.append(deletedSong + " was added back to Liked Songs\n");
+                } catch (NullPointerException e) {
+                    displayTa.append("There is no song in that position, please try again\n");
+                }
             }
-            
-        }else if(playlistCb.getSelectedItem().toString().equalsIgnoreCase("Dancing")){
-            if(dancingPlaylist.isEmpty()){
+            //checks wich playlist is being manipulated    
+        } else if (playlistCb.getSelectedItem().toString().equalsIgnoreCase("Dancing")) {
+            //checks if playlist is empty
+            if (dancingPlaylist.isEmpty()) {
                 displayTa.append("There are no songs to be removed from the Playlist\n");
-            }else{
-                deleteSong = Integer.parseInt(JOptionPane.showInputDialog(null, dancingPlaylist.printList()+"Please enter the position of the song you want to remove:"));
-                object = dancingPlaylist.get(deleteSong);
-                deletedSong = object.getName();
-                dancingPlaylist.remove(deleteSong);                
-                displayTa.append(deletedSong+" was removed from the Dancing Playlist\n");
-                likedSongs.push(object);
-                displayTa.append(deletedSong+" was added back to Liked Songs\n");
+            } else {
+                //displays list and asks for the index of the song to be deleted
+                deleteSong = Integer.parseInt(JOptionPane.showInputDialog(null, dancingPlaylist.printList() + "Please enter the position of the song you want to remove:"));
+                //catch error if user enter an empty index
+                try {
+                    object = dancingPlaylist.get(deleteSong);
+                    deletedSong = object.getName();
+                    //remove song from list
+                    dancingPlaylist.remove(deleteSong);
+                    displayTa.append(deletedSong + " was removed from the Dancing Playlist\n");
+                    //add to liked songs again
+                    likedSongs.push(object);
+                    displayTa.append(deletedSong + " was added back to Liked Songs\n");
+                } catch (NullPointerException e) {
+                    displayTa.append("There is no song in that position, please try again\n");
+                }
             }
-            
-        }else if(playlistCb.getSelectedItem().toString().equalsIgnoreCase("Exercising")){
-            if(exercisingPlaylist.isEmpty()){
+            //checks wich playlist is being manipulated    
+        } else if (playlistCb.getSelectedItem().toString().equalsIgnoreCase("Exercising")) {
+            //checks if playlist is empty
+            if (exercisingPlaylist.isEmpty()) {
                 displayTa.append("There are no songs to be removed from the Playlist\n");
-            }else{
-                deleteSong = Integer.parseInt(JOptionPane.showInputDialog(null, exercisingPlaylist.printList()+"Please enter the position of the song you want to remove:"));
-                object = exercisingPlaylist.get(deleteSong);
-                deletedSong = object.getName();
-                exercisingPlaylist.remove(deleteSong);                
-                displayTa.append(deletedSong+" was removed from the Exercising Playlist\n");
-                likedSongs.push(object);
-                displayTa.append(deletedSong+" was added back to Liked Songs\n");
+            } else {
+                //displays list and asks for the index of the song to be deleted
+                deleteSong = Integer.parseInt(JOptionPane.showInputDialog(null, exercisingPlaylist.printList() + "Please enter the position of the song you want to remove:"));
+                //catch error if user enter an empty index
+                try {
+                    object = exercisingPlaylist.get(deleteSong);
+                    deletedSong = object.getName();
+                    //remove song from list
+                    exercisingPlaylist.remove(deleteSong);
+                    displayTa.append(deletedSong + " was removed from the Exercising Playlist\n");
+                    //add to liked songs again
+                    likedSongs.push(object);
+                    displayTa.append(deletedSong + " was added back to Liked Songs\n");
+                } catch (NullPointerException e) {
+                    displayTa.append("There is no song in that position, please try again\n");
+                }
             }
-            
-        }else{
+            // asks to slect a playlist if none is selected
+        } else {
             displayTa.append("Please select a Playlist\n");
 
         }
     }//GEN-LAST:event_removeBtnActionPerformed
 
     private void moveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_moveBtnActionPerformed
-        // TODO add your handling code here:
+        // holds the index where the song is being moved to
         int position;
+        //holds the index of the song taht is being moved
         int moveSong;
         Song object;
         String movedSong;
-        if(playlistCb.getSelectedItem().toString().equalsIgnoreCase("Happy")){
-            if(happyPlaylist.isEmpty()){
+        if (playlistCb.getSelectedItem().toString().equalsIgnoreCase("Happy")) {
+            if (happyPlaylist.isEmpty()) {
                 displayTa.append("There are no songs to be moved in the Playlist\n");
-            }else{
-                moveSong = Integer.parseInt(JOptionPane.showInputDialog(null, happyPlaylist.printList()+"Please, enter the number of the song you want to move:"));
-                position = Integer.parseInt(JOptionPane.showInputDialog(null, happyPlaylist.printList()+"Please, enter the position where you want to move the song to:"));
-                object = happyPlaylist.get(moveSong);
-                movedSong = object.getName();
-                happyPlaylist.remove(moveSong); 
-                happyPlaylist.add(position, object);
-                displayTa.append(movedSong+" was moved to position"+position+"\n");
-                
+            } else {
+                //takes index of the song that is being moved
+                moveSong = Integer.parseInt(JOptionPane.showInputDialog(null, happyPlaylist.printList() + "Please, enter the number of the song you want to move:"));
+                //takes the position to which the song will be moved
+                position = Integer.parseInt(JOptionPane.showInputDialog(null, happyPlaylist.printList() + "Please, enter the position where you want to move the song to:"));
+                //catch error if user enter an empty index or position
+                try {
+                    //holds song
+                    object = happyPlaylist.get(moveSong);
+                    //holds song's name
+                    movedSong = object.getName();
+                    //adds to new position
+                    happyPlaylist.add(position, object);
+                    //delete song from previous position
+                    happyPlaylist.remove(moveSong);
+                    //displays change to user
+                    displayTa.append(movedSong + " was moved to position" + position + "\n");
+                } catch (NullPointerException e) {
+                    //informs of error
+                    displayTa.append("It is not possible to move that song there, please try again\n");
+                }
+
             }
-            
-        }else if(playlistCb.getSelectedItem().toString().equalsIgnoreCase("Sad")){
-            if(sadPlaylist.isEmpty()){
+
+        } else if (playlistCb.getSelectedItem().toString().equalsIgnoreCase("Sad")) {
+            if (sadPlaylist.isEmpty()) {
                 displayTa.append("There are no songs to be moved in the Playlist\n");
-            }else{
-                moveSong = Integer.parseInt(JOptionPane.showInputDialog(null, sadPlaylist.printList()+"Please, enter the number of the song you want to move:"));
-                position = Integer.parseInt(JOptionPane.showInputDialog(null, sadPlaylist.printList()+"Please, enter the position where you want to move the song to:"));
-                object = sadPlaylist.get(moveSong);
-                movedSong = object.getName();
-                sadPlaylist.remove(moveSong);                
-                sadPlaylist.add(position, object);
-                displayTa.append(movedSong+" was moved to position"+position+"\n");
+            } else {
+                moveSong = Integer.parseInt(JOptionPane.showInputDialog(null, sadPlaylist.printList() + "Please, enter the number of the song you want to move:"));
+                position = Integer.parseInt(JOptionPane.showInputDialog(null, sadPlaylist.printList() + "Please, enter the position where you want to move the song to:"));
+                try {
+                    object = sadPlaylist.get(moveSong);
+                    movedSong = object.getName();
+                    sadPlaylist.add(position, object);
+                    sadPlaylist.remove(moveSong);
+                    displayTa.append(movedSong + " was moved to position" + position + "\n");
+                } catch (NullPointerException e) {
+                    displayTa.append("It is not possible to move that song there, please try again\n");
+                }
             }
-            
-        }else if(playlistCb.getSelectedItem().toString().equalsIgnoreCase("Dancing")){
-            if(dancingPlaylist.isEmpty()){
+
+        } else if (playlistCb.getSelectedItem().toString().equalsIgnoreCase("Dancing")) {
+            if (dancingPlaylist.isEmpty()) {
                 displayTa.append("There are no songs to be moved in the Playlist\n");
-            }else{
-                moveSong = Integer.parseInt(JOptionPane.showInputDialog(null, dancingPlaylist.printList()+"Please, enter the number of the song you want to move:"));
-                position = Integer.parseInt(JOptionPane.showInputDialog(null, dancingPlaylist.printList()+"Please, enter the position where you want to move the song to:"));
-                object = dancingPlaylist.get(moveSong);
-                movedSong = object.getName();
-                dancingPlaylist.remove(moveSong);                
-                dancingPlaylist.add(position, object);
-                displayTa.append(movedSong+" was moved to position"+position+"\n");
+            } else {
+                moveSong = Integer.parseInt(JOptionPane.showInputDialog(null, dancingPlaylist.printList() + "Please, enter the number of the song you want to move:"));
+                position = Integer.parseInt(JOptionPane.showInputDialog(null, dancingPlaylist.printList() + "Please, enter the position where you want to move the song to:"));
+                try {
+                    object = dancingPlaylist.get(moveSong);
+                    movedSong = object.getName();                    
+                    dancingPlaylist.add(position, object);
+                    dancingPlaylist.remove(moveSong);
+                    displayTa.append(movedSong + " was moved to position" + position + "\n");
+                } catch (NullPointerException e) {
+                    displayTa.append("It is not possible to move that song there, please try again\n");
+                }
             }
-            
-        }else if(playlistCb.getSelectedItem().toString().equalsIgnoreCase("Exercising")){
-            if(exercisingPlaylist.isEmpty()){
+
+        } else if (playlistCb.getSelectedItem().toString().equalsIgnoreCase("Exercising")) {
+            if (exercisingPlaylist.isEmpty()) {
                 displayTa.append("There are no songs to be moved in the Playlist\n");
-            }else{
-                moveSong = Integer.parseInt(JOptionPane.showInputDialog(null, exercisingPlaylist.printList()+"Please, enter the number of the song you want to move:"));
-                position = Integer.parseInt(JOptionPane.showInputDialog(null, exercisingPlaylist.printList()+"Please, enter the position where you want to move the song to:"));
-                object = exercisingPlaylist.get(moveSong);
-                movedSong = object.getName();
-                exercisingPlaylist.remove(moveSong);                
-                exercisingPlaylist.add(position, object);
-                displayTa.append(movedSong+" was moved to position"+position+"\n");
+            } else {
+                moveSong = Integer.parseInt(JOptionPane.showInputDialog(null, exercisingPlaylist.printList() + "Please, enter the number of the song you want to move:"));
+                position = Integer.parseInt(JOptionPane.showInputDialog(null, exercisingPlaylist.printList() + "Please, enter the position where you want to move the song to:"));
+                try {
+                    object = exercisingPlaylist.get(moveSong);
+                    movedSong = object.getName();                   
+                    exercisingPlaylist.add(position, object);
+                    exercisingPlaylist.remove(moveSong);
+                    displayTa.append(movedSong + " was moved to position" + position + "\n");
+                } catch (NullPointerException e) {
+                    displayTa.append("It is not possible to move that song there, please try again\n");
+                }
             }
-            
-        }else{
+
+        } else {
             displayTa.append("Please select a Playlist\n");
 
         }
     }//GEN-LAST:event_moveBtnActionPerformed
 
     private void searchBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchBtnActionPerformed
-        // TODO add your handling code here:
+        // holds song be found
         String searchTerm;
-        searchTerm = JOptionPane.showInputDialog(null,"Please, enter the name of the song you are looking for:");
+        //asks user for songs name
+        searchTerm = JOptionPane.showInputDialog(null, "Please, enter the name of the song you are looking for:");
+        //holds default values for variables, in case all conditions fail
         String playlist = "";
         int position = 0;
-        
-        for(int i = 1; i <= happyPlaylist.size(); i++){
-            if(happyPlaylist.get(i).getName().equalsIgnoreCase(searchTerm)){
+        //checks each list for song's name
+        for (int i = 1; i <= happyPlaylist.size(); i++) {
+            //if found returns the playlist's name and position of song in it
+            if (happyPlaylist.get(i).getName().equalsIgnoreCase(searchTerm)) {
                 playlist = "Happy";
                 position = i;
-            } 
+            }
         }
-        if(playlist.equalsIgnoreCase("")){
-            for(int i = 1; i <= sadPlaylist.size(); i++){
-                if(sadPlaylist.get(i).getName().equalsIgnoreCase(searchTerm)){
+        if (playlist.equalsIgnoreCase("")) {
+            for (int i = 1; i <= sadPlaylist.size(); i++) {
+                if (sadPlaylist.get(i).getName().equalsIgnoreCase(searchTerm)) {
                     playlist = "Sad";
                     position = i;
-                } 
+                }
             }
         }
-        if(playlist.equalsIgnoreCase("")){
-            for(int i = 1; i <= dancingPlaylist.size(); i++){
-                if(dancingPlaylist.get(i).getName().equalsIgnoreCase(searchTerm)){
+        if (playlist.equalsIgnoreCase("")) {
+            for (int i = 1; i <= dancingPlaylist.size(); i++) {
+                if (dancingPlaylist.get(i).getName().equalsIgnoreCase(searchTerm)) {
                     playlist = "Dancing";
                     position = i;
-                } 
+                }
             }
         }
-        if(playlist.equalsIgnoreCase("")){
-            for(int i = 1; i <= exercisingPlaylist.size(); i++){
-                if(exercisingPlaylist.get(i).getName().equalsIgnoreCase(searchTerm)){
+        if (playlist.equalsIgnoreCase("")) {
+            for (int i = 1; i <= exercisingPlaylist.size(); i++) {
+                if (exercisingPlaylist.get(i).getName().equalsIgnoreCase(searchTerm)) {
                     playlist = "Exercising";
                     position = i;
-                } 
+                }
             }
         }
-        if(playlist.equalsIgnoreCase("")){
-             displayTa.append("That song is not in a playlist, please try again\n");
-        }else{
-            displayTa.append("The song "+searchTerm+" is in the "+playlist+" playlist in the position "+position+"\n");
+        //if not found returns this message
+        if (playlist.equalsIgnoreCase("")) {
+            displayTa.append("That song is not in a playlist, please try again\n");
+        } else {
+            //returns name of playlist and posistion
+            displayTa.append("The song " + searchTerm + " is in the " + playlist + " playlist in the position " + position + "\n");
         }
     }//GEN-LAST:event_searchBtnActionPerformed
 
     private void printBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printBtnActionPerformed
-        // TODO add your handling code here:
-        if(playlistCb.getSelectedItem().toString().equalsIgnoreCase("Happy")){
-            if(!happyPlaylist.isEmpty()){
+        // checks selected playlist
+        if (playlistCb.getSelectedItem().toString().equalsIgnoreCase("Happy")) {
+            //checks if it is not empty
+            if (!happyPlaylist.isEmpty()) {
+                //calls method to print
                 displayTa.append(happyPlaylist.printList());
-            }else{
+            } else {
+                //displays that it is empty
                 displayTa.append("The Playlist is empty\n");
             }
-            
-        }else if(playlistCb.getSelectedItem().toString().equalsIgnoreCase("Sad")){
-            if(!sadPlaylist.isEmpty()){
+
+        } else if (playlistCb.getSelectedItem().toString().equalsIgnoreCase("Sad")) {
+            if (!sadPlaylist.isEmpty()) {
                 displayTa.append(sadPlaylist.printList());
-            }else{
+            } else {
                 displayTa.append("The Playlist is empty\n");
             }
-            
-        }else if(playlistCb.getSelectedItem().toString().equalsIgnoreCase("Dancing")){
-            if(!dancingPlaylist.isEmpty()){
+
+        } else if (playlistCb.getSelectedItem().toString().equalsIgnoreCase("Dancing")) {
+            if (!dancingPlaylist.isEmpty()) {
                 displayTa.append(dancingPlaylist.printList());
-            }else{
+            } else {
                 displayTa.append("The Playlist is empty\n");
             }
-            
-        }else if(playlistCb.getSelectedItem().toString().equalsIgnoreCase("Exercising")){
-            if(!exercisingPlaylist.isEmpty()){
+
+        } else if (playlistCb.getSelectedItem().toString().equalsIgnoreCase("Exercising")) {
+            if (!exercisingPlaylist.isEmpty()) {
                 displayTa.append(exercisingPlaylist.printList());
-            }else{
+            } else {
                 displayTa.append("The Playlist is empty\n");
             }
-        }else{
+        } else {
             displayTa.append("Please select a Playlist\n");
 
         }
     }//GEN-LAST:event_printBtnActionPerformed
 
     private void sizeBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sizeBtnActionPerformed
-        // TODO add your handling code here:
-        if(playlistCb.getSelectedItem().toString().equalsIgnoreCase("Happy")){
-            displayTa.append("The Happy Playlist has "+happyPlaylist.size()+" songs in it\n");
-            
-        }else if(playlistCb.getSelectedItem().toString().equalsIgnoreCase("Sad")){
-            displayTa.append("The Sad Playlist has "+sadPlaylist.size()+" songs in it\n");
-            
-        }else if(playlistCb.getSelectedItem().toString().equalsIgnoreCase("Dancing")){
-            displayTa.append("The Dancing Playlist has "+dancingPlaylist.size()+" songs in it\n");
-            
-        }else if(playlistCb.getSelectedItem().toString().equalsIgnoreCase("Exercising")){
-            displayTa.append("The Exercising Playlist has "+exercisingPlaylist.size()+" songs in it\n");
-            
-        }else{
+        // checks playlist selected
+        if (playlistCb.getSelectedItem().toString().equalsIgnoreCase("Happy")) {
+            //recovers size, if empty shows zero songs
+            displayTa.append("The Happy Playlist has " + happyPlaylist.size() + " songs in it\n");
+
+        } else if (playlistCb.getSelectedItem().toString().equalsIgnoreCase("Sad")) {
+            displayTa.append("The Sad Playlist has " + sadPlaylist.size() + " songs in it\n");
+
+        } else if (playlistCb.getSelectedItem().toString().equalsIgnoreCase("Dancing")) {
+            displayTa.append("The Dancing Playlist has " + dancingPlaylist.size() + " songs in it\n");
+
+        } else if (playlistCb.getSelectedItem().toString().equalsIgnoreCase("Exercising")) {
+            displayTa.append("The Exercising Playlist has " + exercisingPlaylist.size() + " songs in it\n");
+
+        } else {
             displayTa.append("Please select a Playlist\n");
 
         }
@@ -530,52 +616,52 @@ public class MusicManagerAppGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_playlistCbActionPerformed
 
     private void repeatBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_repeatBtnActionPerformed
-        // TODO add your handling code here:  
-        if(playlistCb.getSelectedItem().toString().equalsIgnoreCase(" ")){
+        // checks playlist selected  
+        if (playlistCb.getSelectedItem().toString().equalsIgnoreCase(" ")) {
             displayTa.append("Please select a Playlist\n");
-            
-        }
-        else{
-            if(playlistCb.getSelectedItem().toString().equalsIgnoreCase("Happy")){
-                if(repeatHappy == false){
-                repeatHappy = true;
-                displayTa.append("Repeat toggled for the Happy playlist\n");
-                }else{
+
+        } else {
+            if (playlistCb.getSelectedItem().toString().equalsIgnoreCase("Happy")) {
+                //toggle repeat/untoggle repeat
+                if (repeatHappy == false) {
+                    repeatHappy = true;
+                    displayTa.append("Repeat toggled for the Happy playlist\n");
+                } else {
                     repeatHappy = false;
                     displayTa.append("Repeat untoggled for the Happy playlist\n");
                 }
 
-            }else if(playlistCb.getSelectedItem().toString().equalsIgnoreCase("Sad")){
-                if(repeatSad == false){
-                repeatSad = true;
-                displayTa.append("Repeat toggled for the Sad playlist\n");
-                }else{
+            } else if (playlistCb.getSelectedItem().toString().equalsIgnoreCase("Sad")) {
+                if (repeatSad == false) {
+                    repeatSad = true;
+                    displayTa.append("Repeat toggled for the Sad playlist\n");
+                } else {
                     repeatSad = false;
                     displayTa.append("Repeat untoggled for the Sad playlist\n");
                 }
 
-            }else if(playlistCb.getSelectedItem().toString().equalsIgnoreCase("Dancing")){
-                if(repeatDancing == false){
-                repeatDancing = true;
-                displayTa.append("Repeat toggled for the Dancing playlist\n");
-                }else{
+            } else if (playlistCb.getSelectedItem().toString().equalsIgnoreCase("Dancing")) {
+                if (repeatDancing == false) {
+                    repeatDancing = true;
+                    displayTa.append("Repeat toggled for the Dancing playlist\n");
+                } else {
                     repeatDancing = false;
                     displayTa.append("Repeat untoggled for the Dancing playlist\n");
-                }                
+                }
 
-            }else if(playlistCb.getSelectedItem().toString().equalsIgnoreCase("Exercising")){
-                if(repeatExercising == false){
-                repeatExercising = true;
-                displayTa.append("Repeat toggled for the Exercising playlist\n");
-                }else{
+            } else if (playlistCb.getSelectedItem().toString().equalsIgnoreCase("Exercising")) {
+                if (repeatExercising == false) {
+                    repeatExercising = true;
+                    displayTa.append("Repeat toggled for the Exercising playlist\n");
+                } else {
                     repeatExercising = false;
                     displayTa.append("Repeat untoggled for the Exercising playlist\n");
-                }                
-                
+                }
+
             }
 
         }
-        
+
     }//GEN-LAST:event_repeatBtnActionPerformed
 
     /**
@@ -612,7 +698,7 @@ public class MusicManagerAppGUI extends javax.swing.JFrame {
             }
         });
     }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addBtn;
     private javax.swing.JButton addSongBtn;
