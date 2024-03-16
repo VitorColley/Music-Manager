@@ -4,11 +4,20 @@
  */
 package musicmanagerapp;
 
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Vitor Colley
  */
 public class MusicManagerAppGUI extends javax.swing.JFrame {
+    
+    Stack likedSongs = new Stack();
+    LinearPlaylist happyPlaylist = new LinearPlaylist();
+    LinearPlaylist sadPlaylist = new LinearPlaylist();
+    LinearPlaylist dancingPlaylist = new LinearPlaylist();
+    LinearPlaylist exercisingPlaylist = new LinearPlaylist();
+    
 
     /**
      * Creates new form MusicManagerAppGUI
@@ -29,14 +38,18 @@ public class MusicManagerAppGUI extends javax.swing.JFrame {
         appLbl = new javax.swing.JLabel();
         songLbl = new javax.swing.JLabel();
         songTf = new javax.swing.JTextField();
-        moodLbl = new javax.swing.JLabel();
-        moodCb = new javax.swing.JComboBox<>();
         mainSp = new javax.swing.JScrollPane();
         displayTa = new javax.swing.JTextArea();
         addBtn = new javax.swing.JButton();
-        addToMoodBtn = new javax.swing.JButton();
-        printPlaylistBtn = new javax.swing.JButton();
-        managePlaylistsBtn = new javax.swing.JButton();
+        addSongBtn = new javax.swing.JButton();
+        playlistCb = new javax.swing.JComboBox<>();
+        playlistSelectLbl = new javax.swing.JLabel();
+        removeBtn = new javax.swing.JButton();
+        moveBtn = new javax.swing.JButton();
+        searchBtn = new javax.swing.JButton();
+        printBtn = new javax.swing.JButton();
+        repeatBtn = new javax.swing.JButton();
+        sizeBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -51,10 +64,6 @@ public class MusicManagerAppGUI extends javax.swing.JFrame {
             }
         });
 
-        moodLbl.setText("Select a Mood:");
-
-        moodCb.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
         displayTa.setColumns(20);
         displayTa.setRows(5);
         mainSp.setViewportView(displayTa);
@@ -66,24 +75,61 @@ public class MusicManagerAppGUI extends javax.swing.JFrame {
             }
         });
 
-        addToMoodBtn.setText("Add New Song to Its Mood Playlist");
-        addToMoodBtn.addActionListener(new java.awt.event.ActionListener() {
+        addSongBtn.setText("Add Song");
+        addSongBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addToMoodBtnActionPerformed(evt);
+                addSongBtnActionPerformed(evt);
             }
         });
 
-        printPlaylistBtn.setText("See Playlists");
-        printPlaylistBtn.addActionListener(new java.awt.event.ActionListener() {
+        playlistCb.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", "Happy", "Sad", "Dancing", "Exercising" }));
+        playlistCb.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                printPlaylistBtnActionPerformed(evt);
+                playlistCbActionPerformed(evt);
             }
         });
 
-        managePlaylistsBtn.setText("Manage Playlists");
-        managePlaylistsBtn.addActionListener(new java.awt.event.ActionListener() {
+        playlistSelectLbl.setText("Select Playlist To Manage:");
+
+        removeBtn.setText("Remove Song");
+        removeBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                managePlaylistsBtnActionPerformed(evt);
+                removeBtnActionPerformed(evt);
+            }
+        });
+
+        moveBtn.setText("Move Song");
+        moveBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                moveBtnActionPerformed(evt);
+            }
+        });
+
+        searchBtn.setText("Search Song");
+        searchBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchBtnActionPerformed(evt);
+            }
+        });
+
+        printBtn.setText("See Playlist");
+        printBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                printBtnActionPerformed(evt);
+            }
+        });
+
+        repeatBtn.setText("Toggle Repeat");
+        repeatBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                repeatBtnActionPerformed(evt);
+            }
+        });
+
+        sizeBtn.setText("Check Size");
+        sizeBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sizeBtnActionPerformed(evt);
             }
         });
 
@@ -93,55 +139,70 @@ public class MusicManagerAppGUI extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(90, 90, 90)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(mainSp)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(songLbl)
-                            .addComponent(moodLbl))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(songTf)
-                            .addComponent(moodCb, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(89, 89, 89))
-            .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(156, 156, 156)
-                        .addComponent(appLbl))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(mainSp, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(songLbl)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(songTf, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(playlistSelectLbl)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(playlistCb, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(addBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(removeBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(addSongBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(sizeBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(moveBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(searchBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(printBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(repeatBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 3, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(89, 89, 89))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(138, 138, 138)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(addBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(addToMoodBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(printPlaylistBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(managePlaylistsBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(66, 66, 66)
+                        .addComponent(appLbl)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(47, 47, 47)
                 .addComponent(appLbl)
-                .addGap(57, 57, 57)
+                .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(songLbl)
                     .addComponent(songTf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(29, 29, 29)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(moodCb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(moodLbl))
-                .addGap(26, 26, 26)
-                .addComponent(mainSp, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
+                .addComponent(mainSp, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(addBtn)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(addToMoodBtn)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(playlistSelectLbl)
+                    .addComponent(playlistCb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(3, 3, 3)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(addSongBtn)
+                    .addComponent(moveBtn)
+                    .addComponent(printBtn))
+                .addGap(3, 3, 3)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(removeBtn)
+                    .addComponent(searchBtn)
+                    .addComponent(repeatBtn))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(printPlaylistBtn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(managePlaylistsBtn)
-                .addContainerGap(41, Short.MAX_VALUE))
+                .addComponent(sizeBtn)
+                .addContainerGap(18, Short.MAX_VALUE))
         );
 
         pack();
@@ -153,22 +214,240 @@ public class MusicManagerAppGUI extends javax.swing.JFrame {
 
     private void addBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBtnActionPerformed
         // TODO add your handling code here:
+        Song newSong = new Song(songTf.getText());
+        if(newSong.getName().equalsIgnoreCase("")){
+            displayTa.append("Please enter a Song\n");
+        }else{
+            likedSongs.push(newSong);
+            displayTa.append(newSong.getName()+" was added to Liked Songs\n");
+        }
+        
         
     }//GEN-LAST:event_addBtnActionPerformed
 
-    private void addToMoodBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addToMoodBtnActionPerformed
+    private void addSongBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addSongBtnActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_addToMoodBtnActionPerformed
+        Song newSong;
+        if(playlistCb.getSelectedItem().toString().equalsIgnoreCase(" ")){
+            displayTa.append("Please select a Playlist\n");
+        }else{
+            newSong = likedSongs.pop();
+            if(newSong!=null){
+                if(playlistCb.getSelectedItem().toString().equalsIgnoreCase("Happy")){
+                happyPlaylist.add(newSong);
+                displayTa.append(newSong.getName()+" was added to the Happy Playlist\n");
+                }else if(playlistCb.getSelectedItem().toString().equalsIgnoreCase("Sad")){
+                    sadPlaylist.add(newSong);
+                    displayTa.append(newSong.getName()+" was added to the Sad Playlist\n");
+                }else if(playlistCb.getSelectedItem().toString().equalsIgnoreCase("Dancing")){
+                    dancingPlaylist.add(newSong);
+                    displayTa.append(newSong.getName()+" was added to the Dancing Playlist\n");
+                }else if(playlistCb.getSelectedItem().toString().equalsIgnoreCase("Exercising")){
+                    exercisingPlaylist.add(newSong);
+                    displayTa.append(newSong.getName()+" was added to the Exercising Playlist\n");
+                }
+            }else{
+                displayTa.append("You can only move the most recently song added to the Liked Songs Playlist to a new playlist\n Please, add another song and try again\n");
+            }
+        }    
+        
+        
+    }//GEN-LAST:event_addSongBtnActionPerformed
 
-    private void printPlaylistBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printPlaylistBtnActionPerformed
+    private void removeBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeBtnActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_printPlaylistBtnActionPerformed
+        int deleteSong;
+        Song object;
+        String deletedSong;
+        if(playlistCb.getSelectedItem().toString().equalsIgnoreCase("Happy")){
+            if(happyPlaylist.isEmpty()){
+                displayTa.append("There are no songs to be removed from the Playlist\n");
+            }else{
+                deleteSong = Integer.parseInt(JOptionPane.showInputDialog(null, happyPlaylist.printList()+"Please enter the position of the song you want to remove:"));
+                object = happyPlaylist.get(deleteSong);
+                deletedSong = object.getName();
+                happyPlaylist.remove(deleteSong);                
+                displayTa.append(deletedSong+" was removed from the Happy Playlist\n");
+                likedSongs.push(object);
+                displayTa.append(deletedSong+" was added back to Liked Songs\n");
+            }
+            
+        }else if(playlistCb.getSelectedItem().toString().equalsIgnoreCase("Sad")){
+            if(sadPlaylist.isEmpty()){
+                displayTa.append("There are no songs to be removed from the Playlist\n");
+            }else{
+                deleteSong = Integer.parseInt(JOptionPane.showInputDialog(null, sadPlaylist.printList()+"Please enter the position of the song you want to remove:"));
+                object = sadPlaylist.get(deleteSong);
+                deletedSong = object.getName();
+                sadPlaylist.remove(deleteSong);                
+                displayTa.append(deletedSong+" was removed from the Sad Playlist\n");
+                likedSongs.push(object);
+                displayTa.append(deletedSong+" was added back to Liked Songs\n");
+            }
+            
+        }else if(playlistCb.getSelectedItem().toString().equalsIgnoreCase("Dancing")){
+            if(dancingPlaylist.isEmpty()){
+                displayTa.append("There are no songs to be removed from the Playlist\n");
+            }else{
+                deleteSong = Integer.parseInt(JOptionPane.showInputDialog(null, dancingPlaylist.printList()+"Please enter the position of the song you want to remove:"));
+                object = dancingPlaylist.get(deleteSong);
+                deletedSong = object.getName();
+                dancingPlaylist.remove(deleteSong);                
+                displayTa.append(deletedSong+" was removed from the Dancing Playlist\n");
+                likedSongs.push(object);
+                displayTa.append(deletedSong+" was added back to Liked Songs\n");
+            }
+            
+        }else if(playlistCb.getSelectedItem().toString().equalsIgnoreCase("Exercising")){
+            if(exercisingPlaylist.isEmpty()){
+                displayTa.append("There are no songs to be removed from the Playlist\n");
+            }else{
+                deleteSong = Integer.parseInt(JOptionPane.showInputDialog(null, exercisingPlaylist.printList()+"Please enter the position of the song you want to remove:"));
+                object = exercisingPlaylist.get(deleteSong);
+                deletedSong = object.getName();
+                exercisingPlaylist.remove(deleteSong);                
+                displayTa.append(deletedSong+" was removed from the Exercising Playlist\n");
+                likedSongs.push(object);
+                displayTa.append(deletedSong+" was added back to Liked Songs\n");
+            }
+            
+        }else{
+            displayTa.append("Please select a Playlist\n");
 
-    private void managePlaylistsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_managePlaylistsBtnActionPerformed
+        }
+    }//GEN-LAST:event_removeBtnActionPerformed
+
+    private void moveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_moveBtnActionPerformed
         // TODO add your handling code here:
-        ManagePlaylistsGUI myGUI = new ManagePlaylistsGUI();
-        myGUI.setVisible(true);
-    }//GEN-LAST:event_managePlaylistsBtnActionPerformed
+        int position;
+        int moveSong;
+        Song object;
+        String movedSong;
+        if(playlistCb.getSelectedItem().toString().equalsIgnoreCase("Happy")){
+            if(happyPlaylist.isEmpty()){
+                displayTa.append("There are no songs to be moved in the Playlist\n");
+            }else{
+                moveSong = Integer.parseInt(JOptionPane.showInputDialog(null, happyPlaylist.printList()+"Please, enter the number of the song you want to move:"));
+                position = Integer.parseInt(JOptionPane.showInputDialog(null, happyPlaylist.printList()+"Please, enter the position where you want to move the song to:"));
+                object = happyPlaylist.get(moveSong);
+                movedSong = object.getName();
+                happyPlaylist.remove(moveSong); 
+                happyPlaylist.add(position, object);
+                displayTa.append(movedSong+" was moved to position"+position+"\n");
+                
+            }
+            
+        }else if(playlistCb.getSelectedItem().toString().equalsIgnoreCase("Sad")){
+            if(sadPlaylist.isEmpty()){
+                displayTa.append("There are no songs to be moved in the Playlist\n");
+            }else{
+                moveSong = Integer.parseInt(JOptionPane.showInputDialog(null, sadPlaylist.printList()+"Please, enter the number of the song you want to move:"));
+                position = Integer.parseInt(JOptionPane.showInputDialog(null, sadPlaylist.printList()+"Please, enter the position where you want to move the song to:"));
+                object = sadPlaylist.get(moveSong);
+                movedSong = object.getName();
+                sadPlaylist.remove(moveSong);                
+                sadPlaylist.add(position, object);
+                displayTa.append(movedSong+" was moved to position"+position+"\n");
+            }
+            
+        }else if(playlistCb.getSelectedItem().toString().equalsIgnoreCase("Dancing")){
+            if(dancingPlaylist.isEmpty()){
+                displayTa.append("There are no songs to be moved in the Playlist\n");
+            }else{
+                moveSong = Integer.parseInt(JOptionPane.showInputDialog(null, dancingPlaylist.printList()+"Please, enter the number of the song you want to move:"));
+                position = Integer.parseInt(JOptionPane.showInputDialog(null, dancingPlaylist.printList()+"Please, enter the position where you want to move the song to:"));
+                object = dancingPlaylist.get(moveSong);
+                movedSong = object.getName();
+                dancingPlaylist.remove(moveSong);                
+                dancingPlaylist.add(position, object);
+                displayTa.append(movedSong+" was moved to position"+position+"\n");
+            }
+            
+        }else if(playlistCb.getSelectedItem().toString().equalsIgnoreCase("Exercising")){
+            if(exercisingPlaylist.isEmpty()){
+                displayTa.append("There are no songs to be moved in the Playlist\n");
+            }else{
+                moveSong = Integer.parseInt(JOptionPane.showInputDialog(null, exercisingPlaylist.printList()+"Please, enter the number of the song you want to move:"));
+                position = Integer.parseInt(JOptionPane.showInputDialog(null, exercisingPlaylist.printList()+"Please, enter the position where you want to move the song to:"));
+                object = exercisingPlaylist.get(moveSong);
+                movedSong = object.getName();
+                exercisingPlaylist.remove(moveSong);                
+                exercisingPlaylist.add(position, object);
+                displayTa.append(movedSong+" was moved to position"+position+"\n");
+            }
+            
+        }else{
+            displayTa.append("Please select a Playlist\n");
+
+        }
+    }//GEN-LAST:event_moveBtnActionPerformed
+
+    private void searchBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchBtnActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_searchBtnActionPerformed
+
+    private void printBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printBtnActionPerformed
+        // TODO add your handling code here:
+        if(playlistCb.getSelectedItem().toString().equalsIgnoreCase("Happy")){
+            if(!happyPlaylist.isEmpty()){
+                displayTa.append(happyPlaylist.printList());
+            }else{
+                displayTa.append("The Playlist is empty\n");
+            }
+            
+        }else if(playlistCb.getSelectedItem().toString().equalsIgnoreCase("Sad")){
+            if(!sadPlaylist.isEmpty()){
+                displayTa.append(sadPlaylist.printList());
+            }else{
+                displayTa.append("The Playlist is empty\n");
+            }
+            
+        }else if(playlistCb.getSelectedItem().toString().equalsIgnoreCase("Dancing")){
+            if(!dancingPlaylist.isEmpty()){
+                displayTa.append(dancingPlaylist.printList());
+            }else{
+                displayTa.append("The Playlist is empty\n");
+            }
+            
+        }else if(playlistCb.getSelectedItem().toString().equalsIgnoreCase("Exercising")){
+            if(!exercisingPlaylist.isEmpty()){
+                displayTa.append(exercisingPlaylist.printList());
+            }else{
+                displayTa.append("The Playlist is empty\n");
+            }
+        }else{
+            displayTa.append("Please select a Playlist\n");
+
+        }
+    }//GEN-LAST:event_printBtnActionPerformed
+
+    private void sizeBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sizeBtnActionPerformed
+        // TODO add your handling code here:
+        if(playlistCb.getSelectedItem().toString().equalsIgnoreCase("Happy")){
+            displayTa.append("The Happy Playlist has "+happyPlaylist.size()+" songs in it\n");
+            
+        }else if(playlistCb.getSelectedItem().toString().equalsIgnoreCase("Sad")){
+            displayTa.append("The Sad Playlist has "+sadPlaylist.size()+" songs in it\n");
+            
+        }else if(playlistCb.getSelectedItem().toString().equalsIgnoreCase("Dancing")){
+            displayTa.append("The Dancing Playlist has "+dancingPlaylist.size()+" songs in it\n");
+            
+        }else if(playlistCb.getSelectedItem().toString().equalsIgnoreCase("Exercising")){
+            displayTa.append("The Exercising Playlist has "+exercisingPlaylist.size()+" songs in it\n");
+            
+        }else{
+            displayTa.append("Please select a Playlist\n");
+
+        }
+    }//GEN-LAST:event_sizeBtnActionPerformed
+
+    private void playlistCbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_playlistCbActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_playlistCbActionPerformed
+
+    private void repeatBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_repeatBtnActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_repeatBtnActionPerformed
 
     /**
      * @param args the command line arguments
@@ -204,17 +483,21 @@ public class MusicManagerAppGUI extends javax.swing.JFrame {
             }
         });
     }
-
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addBtn;
-    private javax.swing.JButton addToMoodBtn;
+    private javax.swing.JButton addSongBtn;
     private javax.swing.JLabel appLbl;
     private javax.swing.JTextArea displayTa;
     private javax.swing.JScrollPane mainSp;
-    private javax.swing.JButton managePlaylistsBtn;
-    private javax.swing.JComboBox<String> moodCb;
-    private javax.swing.JLabel moodLbl;
-    private javax.swing.JButton printPlaylistBtn;
+    private javax.swing.JButton moveBtn;
+    private javax.swing.JComboBox<String> playlistCb;
+    private javax.swing.JLabel playlistSelectLbl;
+    private javax.swing.JButton printBtn;
+    private javax.swing.JButton removeBtn;
+    private javax.swing.JButton repeatBtn;
+    private javax.swing.JButton searchBtn;
+    private javax.swing.JButton sizeBtn;
     private javax.swing.JLabel songLbl;
     private javax.swing.JTextField songTf;
     // End of variables declaration//GEN-END:variables

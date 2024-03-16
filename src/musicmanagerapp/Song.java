@@ -9,11 +9,10 @@ package musicmanagerapp;
  * @author Vitor Colley
  */
 public class Song {
-    private String name, mood;
+    private String name;
 
-    public Song(String name, String mood) {
+    public Song(String name) {
         this.name = name;
-        this.mood = mood;
     }
 
     public String getName() {
@@ -23,14 +22,5 @@ public class Song {
     public void setName(String name) {
         this.name = name;
     }
-
-    public String getMood() {
-        return mood;
-    }
-
-    public void setMood(String mood) {
-        this.mood = mood;
-    }
-    
     
 }

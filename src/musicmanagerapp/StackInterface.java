@@ -10,7 +10,7 @@ package musicmanagerapp;
  */
 interface StackInterface {
     
-    public void push(Song newSong);
+    public void push(Object object);
     
     public Song pop();
     

@@ -14,7 +14,7 @@ public class Stack implements StackInterface{
     
     private ArrayList<Song> likedSongs;
 
-    public Stack(ArrayList<Song> likedSongs) {
+    public Stack() {
        
         likedSongs = new ArrayList<>();
         
@@ -26,7 +26,7 @@ public class Stack implements StackInterface{
     }
     
     @Override
-    public void push(Song newSong){
+    public void push(Object newSong){
         likedSongs.add(0, (Song) newSong);
     }
     @Override
@@ -39,7 +39,7 @@ public class Stack implements StackInterface{
     }
     @Override
     public int size(){
-        return 1;
+        return likedSongs.size();
     }
 
     
